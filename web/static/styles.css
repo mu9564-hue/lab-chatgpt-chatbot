@@ -1,0 +1,12 @@
+body { font-family: Arial, sans-serif; background:#f7f7f8; color:#222; }
+.container { max-width:700px; margin:40px auto; background:white; padding:20px; box-shadow:0 2px 6px rgba(0,0,0,0.08); }
+h1 { margin-top:0 }
+#addForm { display:flex; gap:8px; margin-bottom:12px }
+#addForm input { flex:1; padding:8px }
+#addForm button { padding:8px 12px }
+#tasks { list-style:none; padding:0 }
+.task { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #eee }
+.task span { flex:1 }
+.task span.done { text-decoration:line-through; color:#888 }
+.task button.delete { background:#ff6b6b; color:white; border:none; padding:6px 8px; cursor:pointer }
+.controls { margin-bottom:12px }
