@@ -45,7 +45,7 @@ def respond(message, history):
 
 demo = gr.ChatInterface(
     respond,
-    type="messages",
+    #type="messages",
     title="나만의 ChatGPT 💬 (Gradio)",
     description="Streamlit 버전과 비교해 보세요 — 어느 쪽이 우리 회사에 맞나요?",
 )
