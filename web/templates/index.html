@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>간단한 Chat 앱</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 720px; margin: 24px auto; }
+      #chat { border: 1px solid #ddd; padding: 12px; height: 400px; overflow:auto; }
+      .msg { margin: 6px 0; }
+      .role-user { color: #0b64d6; }
+      .role-assistant { color: #117a3a; }
+      #controls { margin-top: 12px; display:flex; gap:8px }
+      textarea { flex:1; height: 64px }
+    </style>
+  </head>
+  <body>
+    <h2>간단한 Chat 앱 (Flask)</h2>
+
+    <label>페르소나:
+      <select id="persona">
+        <option>친절한 도우미</option>
+        <option>엄격한 사서</option>
+        <option>친근한 친구</option>
+      </select>
+    </label>
+    <div id="chat"></div>
+
+    <div id="controls">
+      <textarea id="input" placeholder="메시지를 입력하세요"></textarea>
+      <button id="send">전송</button>
+      <button id="clear">초기화</button>
+    </div>
+
+    <script>
+      const chat = document.getElementById('chat')
+      const input = document.getElementById('input')
+      const send = document.getElementById('send')
+      const clear = document.getElementById('clear')
+      const persona = document.getElementById('persona')
+
+      let history = []
+
+      function append(role, text) {
+        const d = document.createElement('div')
+        d.className = 'msg ' + (role === 'user' ? 'role-user' : 'role-assistant')
+        d.textContent = `[${role}] ${text}`
+        chat.appendChild(d)
+        chat.scrollTop = chat.scrollHeight
+      }
+
+      async function sendMessage() {
+        const txt = input.value.trim()
+        if (!txt) return
+        history.push({role:'user', content: txt})
+        append('user', txt)
+        input.value = ''
+
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: history, persona: persona.value, temperature: 0.3 })
+        })
+        const data = await res.json()
+        const reply = data.reply || ''
+        history.push({role:'assistant', content: reply})
+        append('assistant', reply)
+      }
+
+      send.addEventListener('click', sendMessage)
+      input.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && (e.ctrlKey||e.metaKey)) sendMessage() })
+      clear.addEventListener('click', ()=>{ history=[]; chat.innerHTML=''; })
+    </script>
+  </body>
+</html>
